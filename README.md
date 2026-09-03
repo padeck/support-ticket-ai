@@ -2,6 +2,16 @@
 
 Eine kleine Anwendung, die eingehende Support-Anfragen automatisiert analysiert und verarbeitet. Sie nimmt eine Anfrage über eine REST-API entgegen, klassifiziert sie (Kategorie, Priorität, Team, Zusammenfassung), kennzeichnet kritische Fälle und speichert das Ergebnis in einer Datenbank.
 
+## Live-Deployment
+
+**API-URL:** https://support-ticket-ai-production.up.railway.app
+
+- **Swagger-Docs:** https://support-ticket-ai-production.up.railway.app/docs
+- **Health-Check:** https://support-ticket-ai-production.up.railway.app/health
+- **Git-Repo:** https://github.com/padeck/support-ticket-ai
+
+> Beispiel: `curl -X POST https://support-ticket-ai-production.up.railway.app/api/tickets -H "Content-Type: application/json" -d '{"request":"Seit heute Morgen ist das Produktivsystem nicht erreichbar."}'`
+
 ## Was die App macht
 
 - **POST** einer Support-Anfrage → automatische Analyse → persistiertes Ticket als Ergebnis
