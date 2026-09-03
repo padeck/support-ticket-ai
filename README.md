@@ -36,11 +36,24 @@ Die API läuft dann auf `http://localhost:8000`. Die interaktive Swagger-Dokumen
 
 ### Konfiguration
 
-Kopiere `.env.example` nach `.env` und passe Werte an:
+Alle Einstellungen erfolgen über Environment-Variablen (optional in einer lokalen `.env`-Datei):
+
+| Variable | Default | Beschreibung |
+|---|---|---|
+| `AI_PROVIDER` | `auto` | `auto` \| `openai` \| `ollama` \| `simulated` |
+| `OPENAI_API_KEY` | – | OpenAI-Key für echtes LLM (falls gesetzt → OpenAI als Primary) |
+| `OLLAMA_URL` | `http://localhost:11434` | Lokale Ollama-Instanz |
+| `OLLAMA_MODEL` | `qwen3:14b` | Ollama-Modellname |
+| `DATABASE_URL` | `sqlite:///./local.db` | PostgreSQL-URL (Produktion) oder SQLite (lokal) |
+| `API_KEY` | – | Optionaler `X-API-Key`-Schutz (nur aktiv, wenn gesetzt) |
+| `RATE_LIMIT_PER_MINUTE` | `30` | Requests pro Minute pro IP |
+
+Beispiel (lokale `.env`):
 
 ```bash
 # AI provider: auto | openai | ollama | simulated
-AI_PROVIDER=simulated
+AI_PROVIDER=auto
+OPENAI_API_KEY=sk-...
 ```
 
 ## API-Endpunkte
