@@ -37,6 +37,21 @@ def test_rule_engine_team_mapping():
     assert result.assigned_team == "identity-operations"
 
 
+def test_all_teams_are_from_valid_set():
+    from app.ai_service import TEAM_MAPPING
+    from app.ai_service import simulate_ai
+
+    valid = set(TEAM_MAPPING.values())
+    for text in [
+        "Mein Konto ist gesperrt.",
+        "Das Produktivsystem ist nicht erreichbar.",
+        "Wie ändere ich meine Rechnungsadresse?",
+        "Wie lege ich ein Projekt an?",
+        "Hallo, ich habe eine allgemeine Frage.",
+    ]:
+        assert simulate_ai(text).assigned_team in valid
+
+
 def test_rule_engine_manual_review_required():
     result = simulate_ai("Seit heute ist das Produktivsystem komplett nicht erreichbar, alle Nutzer betroffen.")
     assert result.status == "manual_review_required"

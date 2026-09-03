@@ -171,7 +171,10 @@ def _http_llm_analyze(url: str, model: str, text: str, api_key: Optional[str] = 
         category = "general"
     if priority not in PRIORITY_SCORING:
         priority = "low"
-    team = data.get("assignedTeam") or TEAM_MAPPING.get(category, TEAM_MAPPING["general"])
+
+    valid_teams = set(TEAM_MAPPING.values())
+    llm_team = data.get("assignedTeam")
+    team = llm_team if llm_team in valid_teams else TEAM_MAPPING.get(category, TEAM_MAPPING["general"])
     status = "manual_review_required" if (category == "incident" and priority == "critical") else "open"
 
     return AnalysisResult(
