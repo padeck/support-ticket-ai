@@ -10,6 +10,8 @@ def _build_engine():
     url = settings.database_url
     if not url or url.startswith("@"):
         url = "sqlite:///./local.db"
+    if url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
 
     connect_args = {}
     if url.startswith("sqlite"):
