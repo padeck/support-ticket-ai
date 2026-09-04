@@ -173,8 +173,9 @@ pytest -v
 
 ## Eingesetzte Hilfsmittel
 
-- **Claude (opencode)** – Implementierung
-- **Ollama** mit lokalem `qwen3:14b` – als lokales LLM zur Analyse (optional)
+- **Opencode (Big Pickle)** – Implementierung
+- **Claude Code** zur anschließenden Überprüfung des erzeugten Codes
+- **Google** und **ChatGPT** für Recherchen und Rückfragen
 
 ## Punkte, die ich mit mehr Zeit noch umgesetzt hätte
 
