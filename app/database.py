@@ -38,23 +38,42 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
-def ensure_schema():
+def _table_columns(conn, table: str) -> set[str]:
+    """Return the set of column names for a table, dialect-agnostic."""
+    if conn.dialect.name == "sqlite":
+        rows = conn.execute(text(f"PRAGMA table_info({table})")).fetchall()
+        return {row[1] for row in rows}
+    rows = conn.execute(
+        text(
+            "SELECT column_name FROM information_schema.columns "
+            "WHERE table_name = :t"
+        ),
+        {"t": table},
+    ).fetchall()
+    return {row[0] for row in rows}
+
+
+def ensure_schema(bind=None):
     """Idempotent additive migrations for the tickets table.
 
     create_all() only creates missing tables, not missing columns on existing
     tables. This adds any new additive columns that may be absent (e.g. after a
-    rolling deploy) without destroying existing data.
+    rolling deploy) without destroying existing data. It is dialect-aware:
+    SQLite has no ``ADD COLUMN IF NOT EXISTS`` (that is a Postgres extension),
+    so column presence is checked first via introspection instead.
     """
-    statements = [
-        "ALTER TABLE tickets ADD COLUMN IF NOT EXISTS ai_provider VARCHAR NOT NULL DEFAULT 'unknown'",
-    ]
-    with engine.begin() as conn:
-        for statement in statements:
-            try:
-                conn.execute(text(statement))
-            except Exception:
-                # Column already present or not applicable (e.g. SQLite path) -> ignore.
-                pass
+    eng = bind or engine
+    # name -> SQL column definition
+    additive_columns = {
+        "ai_provider": "VARCHAR NOT NULL DEFAULT 'unknown'",
+    }
+
+    with eng.begin() as conn:
+        existing = _table_columns(conn, "tickets")
+        for name, definition in additive_columns.items():
+            if name in existing:
+                continue
+            conn.execute(text(f"ALTER TABLE tickets ADD COLUMN {name} {definition}"))
 
 
 def get_db():
