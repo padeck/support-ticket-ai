@@ -124,7 +124,7 @@ curl http://localhost:8000/health
 
 Die Analyse läuft in folgender Priorität:
 
-1. **OpenAI** – falls `OPENAI_API_KEY` gesetzt ist (Modell `gpt-3.5-turbo`, temperatur 0, strukturiertes JSON-Output)
+1. **OpenAI** – falls `OPENAI_API_KEY` gesetzt ist (Modell `gpt-4o-mini`, temperatur 0, strukturiertes JSON-Output)
 2. **Ollama** – falls ein lokales Ollama läuft (Standardmodell `qwen3:14b`)
 3. **Simulierte Rule-Engine** – immer verfügbar, garantiert einen funktionierenden Fallback
 

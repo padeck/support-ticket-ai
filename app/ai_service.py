@@ -191,7 +191,7 @@ def _http_llm_analyze(url: str, model: str, text: str, api_key: Optional[str] = 
 
 def _analyze_openai(text: str) -> Optional[AnalysisResult]:
     url = "https://api.openai.com/v1"
-    return _http_llm_analyze(url, "gpt-3.5-turbo", text, api_key=settings.openai_api_key, provider="openai")
+    return _http_llm_analyze(url, "gpt-4o-mini", text, api_key=settings.openai_api_key, provider="openai")
 
 
 def _analyze_ollama(text: str) -> Optional[AnalysisResult]:
