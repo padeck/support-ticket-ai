@@ -12,10 +12,11 @@ from sqlalchemy import select
 
 from . import models, schemas
 from .config import settings
-from .database import Base, engine, get_db
+from .database import Base, engine, get_db, ensure_schema
 from .ai_service import analyze_request
 
 Base.metadata.create_all(bind=engine)
+ensure_schema()
 
 logging.basicConfig(
     level=logging.INFO,
