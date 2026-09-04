@@ -17,6 +17,7 @@ def test_create_ticket_success(client):
     assert data["assignedTeam"] == "identity-operations"
     assert isinstance(data["summary"], str) and data["summary"]
     assert data["status"] in ("open", "manual_review_required")
+    assert data["aiProvider"] == "simulated"
 
 
 def test_create_ticket_empty_request(client):

@@ -66,6 +66,12 @@ def test_analyze_request_uses_simulated_when_provider_set():
     result = analyze_request("Mein Konto ist gesperrt.")
     assert isinstance(result, AnalysisResult)
     assert result.category == "account_access"
+    assert result.provider == "simulated"
+
+
+def test_simulate_ai_reports_simulated_provider():
+    result = simulate_ai("Mein Konto ist gesperrt.")
+    assert result.provider == "simulated"
 
 
 def test_score_category_general_fallback():

@@ -13,6 +13,7 @@ class TicketResponse(BaseModel):
     assignedTeam: str
     summary: str
     status: str
+    aiProvider: Optional[str] = None
     createdAt: Optional[str] = None
 
 

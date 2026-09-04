@@ -18,5 +18,6 @@ class Ticket(Base):
     assigned_team = Column(String, nullable=False)
     summary = Column(Text, nullable=False)
     status = Column(String, nullable=False, default="open")
+    ai_provider = Column(String, nullable=False, default="unknown")
     created_at = Column(DateTime, default=_utcnow)
     updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow)

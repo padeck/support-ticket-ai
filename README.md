@@ -85,9 +85,12 @@ curl -X POST http://localhost:8000/api/tickets \
   "assignedTeam": "identity-operations",
   "summary": "Mein Benutzerkonto ist gesperrt und ich kann mich nicht anmelden.",
   "status": "open",
+  "aiProvider": "simulated",
   "createdAt": "2026-09-03T12:24:00"
 }
 ```
+
+> **`aiProvider`** gibt an, **welche Methode** den Fall tatsächlich klassifiziert hat: `openai`, `ollama` oder `simulated`. Dieses Feld wird zusammen mit dem Ticket dauerhaft in der Datenbank gespeichert.
 
 ### 2. Ticket abrufen
 
@@ -125,6 +128,8 @@ Die Analyse läuft in folgender Priorität:
 2. **Ollama** – falls ein lokales Ollama läuft (Standardmodell `qwen3:14b`)
 3. **Simulierte Rule-Engine** – immer verfügbar, garantiert einen funktionierenden Fallback
 
+**Robustes Fallback-Verhalten:** Schlägt ein Provider fehl (z. B. fehlendes OpenAI-Guthaben → HTTP 401/402, Timeout, oder Netzwerkfehler), wird automatisch der nächste Provider versucht. Die Anwendung stürzt dabei **nie** ab. Der letztlich verwendete Provider ist pro Ticket über das Feld `aiProvider` nachvollziehbar.
+
 Der aktive Provider lässt sich über `AI_PROVIDER=auto|openai|ollama|simulated` steuern.
 
 ### Simulierte Rule-Engine (nachvollziehbar)
@@ -153,7 +158,7 @@ Das Projekt enthält eine `railway.json` mit Health-Check-Konfiguration.
 
 ```bash
 pytest -v
-# 24 Tests: API-Endpunkte + Rule-Engine-Logik
+# 26 Tests: API-Endpunkte + Rule-Engine-Logik + Provider-Fallback
 ```
 
 ## Annahmen & Entscheidungen

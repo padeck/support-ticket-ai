@@ -98,6 +98,7 @@ def _to_response(ticket: models.Ticket) -> schemas.TicketResponse:
         assignedTeam=ticket.assigned_team,
         summary=ticket.summary,
         status=ticket.status,
+        aiProvider=ticket.ai_provider,
         createdAt=ticket.created_at.isoformat() if ticket.created_at else None,
     )
 
@@ -116,7 +117,7 @@ def health(db: Session = Depends(get_db)):
 def create_ticket(payload: schemas.TicketCreate, db: Session = Depends(get_db)):
     _log_json("info", "ticket received", request_text=payload.request)
     result = analyze_request(payload.request)
-    _log_json("info", "ticket analyzed", category=result.category, priority=result.priority, assigned_team=result.assigned_team, status=result.status)
+    _log_json("info", "ticket analyzed", category=result.category, priority=result.priority, assigned_team=result.assigned_team, status=result.status, ai_provider=result.provider)
 
     ticket_id = _generate_ticket_id()
     ticket = models.Ticket(
@@ -127,6 +128,7 @@ def create_ticket(payload: schemas.TicketCreate, db: Session = Depends(get_db)):
         assigned_team=result.assigned_team,
         summary=result.summary,
         status=result.status,
+        ai_provider=result.provider,
     )
     db.add(ticket)
     db.commit()

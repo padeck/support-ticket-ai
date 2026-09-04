@@ -15,6 +15,7 @@ class AnalysisResult:
     assigned_team: str
     summary: str
     status: str
+    provider: str = "simulated"
 
 
 TEAM_MAPPING = {
@@ -128,10 +129,11 @@ def simulate_ai(text: str) -> AnalysisResult:
         assigned_team=assigned_team,
         summary=summary,
         status=status,
+        provider="simulated",
     )
 
 
-def _http_llm_analyze(url: str, model: str, text: str, api_key: Optional[str] = None) -> Optional[AnalysisResult]:
+def _http_llm_analyze(url: str, model: str, text: str, api_key: Optional[str] = None, provider: str = "llm") -> Optional[AnalysisResult]:
     """Analyze via an OpenAI-compatible HTTP endpoint (OpenAI or Ollama)."""
     payload = {
         "model": model,
@@ -183,17 +185,18 @@ def _http_llm_analyze(url: str, model: str, text: str, api_key: Optional[str] = 
         assigned_team=team,
         summary=summary,
         status=status,
+        provider=provider,
     )
 
 
 def _analyze_openai(text: str) -> Optional[AnalysisResult]:
     url = "https://api.openai.com/v1"
-    return _http_llm_analyze(url, "gpt-3.5-turbo", text, api_key=settings.openai_api_key)
+    return _http_llm_analyze(url, "gpt-3.5-turbo", text, api_key=settings.openai_api_key, provider="openai")
 
 
 def _analyze_ollama(text: str) -> Optional[AnalysisResult]:
     try:
-        return _http_llm_analyze(settings.ollama_url, settings.ollama_model, text)
+        return _http_llm_analyze(settings.ollama_url, settings.ollama_model, text, provider="ollama")
     except Exception:
         return None
 
