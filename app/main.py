@@ -135,7 +135,7 @@ def create_ticket(payload: schemas.TicketCreate, db: Session = Depends(get_db)):
     return _to_response(ticket)
 
 
-@app.get("/api/tickets", response_model=schemas.TicketListResponse)
+@app.get("/api/tickets", response_model=schemas.TicketListResponse, dependencies=[Depends(require_api_key)])
 def list_tickets(
     request: Request,
     status: str | None = None,
@@ -154,7 +154,7 @@ def list_tickets(
     return schemas.TicketListResponse(tickets=[_to_response(t) for t in tickets], total=total)
 
 
-@app.get("/api/tickets/{ticket_id}", response_model=schemas.TicketResponse)
+@app.get("/api/tickets/{ticket_id}", response_model=schemas.TicketResponse, dependencies=[Depends(require_api_key)])
 def get_ticket(ticket_id: str, db: Session = Depends(get_db)):
     ticket = db.query(models.Ticket).filter(models.Ticket.ticket_id == ticket_id).first()
     if not ticket:
@@ -162,7 +162,7 @@ def get_ticket(ticket_id: str, db: Session = Depends(get_db)):
     return _to_response(ticket)
 
 
-@app.patch("/api/tickets/{ticket_id}", response_model=schemas.TicketResponse)
+@app.patch("/api/tickets/{ticket_id}", response_model=schemas.TicketResponse, dependencies=[Depends(require_api_key)])
 def update_ticket_status(ticket_id: str, payload: schemas.StatusUpdate, db: Session = Depends(get_db)):
     ticket = db.query(models.Ticket).filter(models.Ticket.ticket_id == ticket_id).first()
     if not ticket:
